@@ -1,5 +1,5 @@
-name: flutter_geolocation_example
-description: Interactive example showcasing flutter_geolocation widgets and engine.
+name: geolocator_flutter_example
+description: Interactive example showcasing geolocator_flutter widgets and engine.
 publish_to: none
 
 environment:
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_geolocation:
+  geolocator_flutter:
     path: ../
 
 dev_dependencies:

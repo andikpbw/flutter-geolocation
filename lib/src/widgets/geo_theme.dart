@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-/// Visual theme configuration for all `flutter_geolocation` UI widgets.
+/// Visual theme configuration for all `geolocator_flutter` UI widgets.
 ///
 /// Built purely on `package:flutter/widgets.dart` so widgets integrate cleanly
 /// into any Flutter application without depending on Material or Cupertino.
@@ -169,7 +169,7 @@ class GeoTheme {
   );
 }
 
-/// Inherited scope providing a [GeoTheme] to descendant `flutter_geolocation`
+/// Inherited scope providing a [GeoTheme] to descendant `geolocator_flutter`
 /// widgets.
 class GeoThemeScope extends InheritedWidget {
   /// Creates a [GeoThemeScope].

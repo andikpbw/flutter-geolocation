@@ -1,4 +1,4 @@
-group = "id.humanize.flutter_geolocation"
+group = "id.humanize.geolocator_flutter"
 version = "1.0.0"
 
 buildscript {
@@ -21,7 +21,7 @@ allprojects {
 apply plugin: "com.android.library"
 
 android {
-    namespace = "id.humanize.flutter_geolocation"
+    namespace = "id.humanize.geolocator_flutter"
     compileSdk = 35
 
     compileOptions {

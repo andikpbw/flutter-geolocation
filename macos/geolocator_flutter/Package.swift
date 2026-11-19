@@ -3,17 +3,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "flutter_geolocation",
+    name: "geolocator_flutter",
     platforms: [
-        .iOS("12.0")
+        .macOS("10.15")
     ],
     products: [
-        .library(name: "flutter-geolocation", targets: ["flutter_geolocation"])
+        .library(name: "geolocator-flutter", targets: ["geolocator_flutter"])
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "flutter_geolocation",
+            name: "geolocator_flutter",
             dependencies: [],
             resources: [
                 .process("PrivacyInfo.xcprivacy")

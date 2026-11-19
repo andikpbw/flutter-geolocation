@@ -1,11 +1,11 @@
-import Cocoa
 import CoreLocation
-import FlutterMacOS
+import Flutter
+import UIKit
 
-public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManagerDelegate {
-  private static let methodChannelName = "id.humanize.flutter_geolocation/methods"
-  private static let positionChannelName = "id.humanize.flutter_geolocation/positions"
-  private static let serviceChannelName = "id.humanize.flutter_geolocation/service_status"
+public class GeolocatorFlutterPlugin: NSObject, FlutterPlugin, CLLocationManagerDelegate {
+  private static let methodChannelName = "id.humanize.geolocator_flutter/methods"
+  private static let positionChannelName = "id.humanize.geolocator_flutter/positions"
+  private static let serviceChannelName = "id.humanize.geolocator_flutter/service_status"
 
   private let locationManager = CLLocationManager()
   private var pendingPermissionResult: FlutterResult?
@@ -15,24 +15,24 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
   private var isStreamingPositions = false
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let instance = FlutterGeolocationPlugin()
+    let instance = GeolocatorFlutterPlugin()
     let methodChannel = FlutterMethodChannel(
       name: methodChannelName,
-      binaryMessenger: registrar.messenger
+      binaryMessenger: registrar.messenger()
     )
     registrar.addMethodCallDelegate(instance, channel: methodChannel)
 
     let positionChannel = FlutterEventChannel(
       name: positionChannelName,
-      binaryMessenger: registrar.messenger
+      binaryMessenger: registrar.messenger()
     )
-    positionChannel.setStreamHandler(MacPositionStreamHandler(plugin: instance))
+    positionChannel.setStreamHandler(PositionStreamHandler(plugin: instance))
 
     let serviceChannel = FlutterEventChannel(
       name: serviceChannelName,
-      binaryMessenger: registrar.messenger
+      binaryMessenger: registrar.messenger()
     )
-    serviceChannel.setStreamHandler(MacServiceStatusStreamHandler(plugin: instance))
+    serviceChannel.setStreamHandler(ServiceStatusStreamHandler(plugin: instance))
   }
 
   override init() {
@@ -47,7 +47,9 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
     case "checkPermission":
       result(permissionString(for: currentAuthorizationStatus()))
     case "requestPermission":
-      requestLocationPermission(result: result)
+      let args = call.arguments as? [String: Any]
+      let always = args?["always"] as? Bool ?? false
+      requestLocationPermission(always: always, result: result)
     case "getLastKnownPosition":
       if let loc = locationManager.location {
         result(locationToMap(loc))
@@ -58,18 +60,20 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
       let args = call.arguments as? [String: Any] ?? [:]
       fetchCurrentPosition(args: args, result: result)
     case "openAppSettings", "openLocationSettings":
-      guard let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices") else {
+      guard let url = URL(string: UIApplication.openSettingsURLString) else {
         result(false)
         return
       }
-      result(NSWorkspace.shared.open(url))
+      UIApplication.shared.open(url, options: [:]) { success in
+        result(success)
+      }
     default:
       result(FlutterMethodNotImplemented)
     }
   }
 
   private func currentAuthorizationStatus() -> CLAuthorizationStatus {
-    if #available(macOS 11.0, *) {
+    if #available(iOS 14.0, *) {
       return locationManager.authorizationStatus
     }
     return CLLocationManager.authorizationStatus()
@@ -79,19 +83,21 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
     switch status {
     case .authorizedAlways:
       return "always"
+    case .authorizedWhenInUse:
+      return "whileInUse"
     case .denied, .restricted:
       return "deniedForever"
     case .notDetermined:
       return "denied"
-    default:
-      return "whileInUse"
+    @unknown default:
+      return "unableToDetermine"
     }
   }
 
-  private func requestLocationPermission(result: @escaping FlutterResult) {
+  private func requestLocationPermission(always: Bool, result: @escaping FlutterResult) {
     let status = currentAuthorizationStatus()
-    if status == .authorizedAlways {
-      result("always")
+    if status == .authorizedAlways || (status == .authorizedWhenInUse && !always) {
+      result(permissionString(for: status))
       return
     }
     if status == .denied || status == .restricted {
@@ -99,10 +105,10 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
       return
     }
     pendingPermissionResult = result
-    if #available(macOS 10.15, *) {
-      locationManager.requestWhenInUseAuthorization()
+    if always {
+      locationManager.requestAlwaysAuthorization()
     } else {
-      locationManager.startUpdatingLocation()
+      locationManager.requestWhenInUseAuthorization()
     }
   }
 
@@ -133,6 +139,12 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
       result(FlutterError(code: "SERVICE_DISABLED", message: "Location services are disabled.", details: nil))
       return
     }
+    let status = currentAuthorizationStatus()
+    guard status == .authorizedWhenInUse || status == .authorizedAlways else {
+      let code = (status == .denied || status == .restricted) ? "PERMISSION_DENIED_FOREVER" : "PERMISSION_DENIED"
+      result(FlutterError(code: code, message: "Location permission is not granted.", details: nil))
+      return
+    }
     configureManager(args: args)
     pendingPositionResult = result
     locationManager.requestLocation()
@@ -141,6 +153,12 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
   fileprivate func startStreaming(args: [String: Any], sink: @escaping FlutterEventSink) {
     guard CLLocationManager.locationServicesEnabled() else {
       sink(FlutterError(code: "SERVICE_DISABLED", message: "Location services are disabled.", details: nil))
+      return
+    }
+    let status = currentAuthorizationStatus()
+    guard status == .authorizedWhenInUse || status == .authorizedAlways else {
+      let code = (status == .denied || status == .restricted) ? "PERMISSION_DENIED_FOREVER" : "PERMISSION_DENIED"
+      sink(FlutterError(code: code, message: "Location permission is not granted.", details: nil))
       return
     }
     configureManager(args: args)
@@ -165,7 +183,17 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
   }
 
   public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-    let status = currentAuthorizationStatus()
+    handleAuthorizationChange(currentAuthorizationStatus())
+  }
+
+  public func locationManager(
+    _ manager: CLLocationManager,
+    didChangeAuthorization status: CLAuthorizationStatus
+  ) {
+    handleAuthorizationChange(status)
+  }
+
+  private func handleAuthorizationChange(_ status: CLAuthorizationStatus) {
     if let pending = pendingPermissionResult, status != .notDetermined {
       pendingPermissionResult = nil
       pending(permissionString(for: status))
@@ -213,18 +241,26 @@ public class FlutterGeolocationPlugin: NSObject, FlutterPlugin, CLLocationManage
       "isMocked": false,
       "provider": "corelocation",
     ]
-    if #available(macOS 10.15, *) {
+    if #available(iOS 13.4, *) {
       map["headingAccuracy"] = location.courseAccuracy >= 0 ? location.courseAccuracy : 0.0
+    }
+    if #available(iOS 10.0, *) {
       map["speedAccuracy"] = location.speedAccuracy >= 0 ? location.speedAccuracy : 0.0
+    }
+    if #available(iOS 15.0, *), let sourceInfo = location.sourceInformation {
+      map["isMocked"] = sourceInfo.isSimulatedBySoftware || sourceInfo.isProducedByAccessory
+    }
+    if let floor = location.floor {
+      map["floor"] = floor.level
     }
     return map
   }
 }
 
-private final class MacPositionStreamHandler: NSObject, FlutterStreamHandler {
-  weak var plugin: FlutterGeolocationPlugin?
+private final class PositionStreamHandler: NSObject, FlutterStreamHandler {
+  weak var plugin: GeolocatorFlutterPlugin?
 
-  init(plugin: FlutterGeolocationPlugin) {
+  init(plugin: GeolocatorFlutterPlugin) {
     self.plugin = plugin
   }
 
@@ -240,10 +276,10 @@ private final class MacPositionStreamHandler: NSObject, FlutterStreamHandler {
   }
 }
 
-private final class MacServiceStatusStreamHandler: NSObject, FlutterStreamHandler {
-  weak var plugin: FlutterGeolocationPlugin?
+private final class ServiceStatusStreamHandler: NSObject, FlutterStreamHandler {
+  weak var plugin: GeolocatorFlutterPlugin?
 
-  init(plugin: FlutterGeolocationPlugin) {
+  init(plugin: GeolocatorFlutterPlugin) {
     self.plugin = plugin
   }
 

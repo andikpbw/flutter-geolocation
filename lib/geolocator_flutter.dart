@@ -26,7 +26,7 @@ export 'src/engine/geo_controller.dart';
 export 'src/engine/geo_kalman_filter.dart';
 export 'src/engine/geo_track_recorder.dart';
 export 'src/engine/geofence_engine.dart';
-export 'src/flutter_geolocation_client.dart';
+export 'src/geolocator_flutter_client.dart';
 export 'src/platform/geolocation_platform.dart';
 export 'src/platform/method_channel_geolocation.dart';
 export 'src/platform/simulated_geolocation_platform.dart';

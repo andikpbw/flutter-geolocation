@@ -1,12 +1,12 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_geolocation/flutter_geolocation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geolocator_flutter/geolocator_flutter.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('MethodChannelGeolocation', () {
-    const channel = MethodChannel('id.humanize.flutter_geolocation/methods');
+    const channel = MethodChannel('id.humanize.geolocator_flutter/methods');
     late MethodChannelGeolocation platform;
     late GeolocationPlatform previousPlatform;
 

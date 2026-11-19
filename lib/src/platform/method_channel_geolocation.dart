@@ -20,13 +20,13 @@ class MethodChannelGeolocation extends GeolocationPlatform {
     EventChannel? serviceStatusChannel,
   }) : methodChannel =
            methodChannel ??
-           const MethodChannel('id.humanize.flutter_geolocation/methods'),
+           const MethodChannel('id.humanize.geolocator_flutter/methods'),
        positionChannel =
            positionChannel ??
-           const EventChannel('id.humanize.flutter_geolocation/positions'),
+           const EventChannel('id.humanize.geolocator_flutter/positions'),
        serviceStatusChannel =
            serviceStatusChannel ??
-           const EventChannel('id.humanize.flutter_geolocation/service_status');
+           const EventChannel('id.humanize.geolocator_flutter/service_status');
 
   /// Primary method channel used for one-shot commands.
   @visibleForTesting

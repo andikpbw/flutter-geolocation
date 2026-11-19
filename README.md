@@ -1,18 +1,18 @@
 <p align="center">
-  <a href="https://pub.dev/packages/flutter_geolocation">
-    <img src="https://raw.githubusercontent.com/andikpbw/flutter-geolocation/main/screenshots/gold_medal_banner.png" alt="#1 Flutter Library — flutter_geolocation" width="100%" />
+  <a href="https://pub.dev/packages/geolocator_flutter">
+    <img src="https://raw.githubusercontent.com/andikpbw/flutter-geolocation/main/screenshots/gold_medal_banner.png" alt="#1 Flutter Library — geolocator_flutter" width="100%" />
   </a>
 </p>
 
-<h1 align="center">flutter_geolocation</h1>
+<h1 align="center">geolocator_flutter</h1>
 
 <p align="center">
   <strong>Modern, lightweight, ultra-accurate geolocation toolkit for Flutter — with zero third-party dependencies, WGS-84 geodesy, adaptive Kalman smoothing, circular &amp; polygonal geofencing, track recording, and pure-widget HUD instruments.</strong>
 </p>
 
 <p align="center">
-  <a href="https://pub.dev/packages/flutter_geolocation"><img src="https://img.shields.io/pub/v/flutter_geolocation.svg?color=22D3EE&label=pub.dev&style=for-the-badge" alt="pub.dev" /></a>
-  <a href="https://pub.dev/packages/flutter_geolocation/score"><img src="https://img.shields.io/badge/pub%20points-160%2F160-10B981?style=for-the-badge" alt="160/160 Pub Points" /></a>
+  <a href="https://pub.dev/packages/geolocator_flutter"><img src="https://img.shields.io/pub/v/geolocator_flutter.svg?color=22D3EE&label=pub.dev&style=for-the-badge" alt="pub.dev" /></a>
+  <a href="https://pub.dev/packages/geolocator_flutter/score"><img src="https://img.shields.io/badge/pub%20points-160%2F160-10B981?style=for-the-badge" alt="160/160 Pub Points" /></a>
   <img src="https://img.shields.io/badge/dependencies-ZERO-F59E0B?style=for-the-badge" alt="Zero Dependencies" />
   <img src="https://img.shields.io/badge/Flutter%203.50%2B-Zero%20Material-38BDF8?style=for-the-badge" alt="Flutter 3.50+ Zero Material" />
   <img src="https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20macOS%20%7C%20Windows%20%7C%20Linux%20%7C%20Web%20%2B%20Wasm-6366F1?style=for-the-badge" alt="All 6 Platforms + Wasm" />
@@ -30,14 +30,14 @@
 Real Flutter widgets (`GeoRadarWidget`, `GeoCompassWidget`, `GeoTelemetryCard`, `GeoStatusBadge`) running live with WGS-84 tracking, breadcrumb trails, active geofence detection, and real-time `DD` / `DMS` / `Geohash` coordinate switching — built **100% on `package:flutter/widgets.dart`** with **zero `material.dart` imports**:
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/andikpbw/flutter-geolocation/main/screenshots/live_demo.gif" alt="flutter_geolocation Live Interactive UI Animation" width="880" />
+  <img src="https://raw.githubusercontent.com/andikpbw/flutter-geolocation/main/screenshots/live_demo.gif" alt="geolocator_flutter Live Interactive UI Animation" width="880" />
 </p>
 
 ---
 
-## Why `flutter_geolocation`?
+## Why `geolocator_flutter`?
 
-| Capability | `flutter_geolocation` | Typical Location Plugins |
+| Capability | `geolocator_flutter` | Typical Location Plugins |
 | :--- | :---: | :---: |
 | **Third-Party Pub Dependencies** | **Zero** (pure Flutter SDK) | 5–15 transitive packages |
 | **Flutter 3.47–3.50+ Ready (Zero `material.dart`)** | **100% `flutter/widgets.dart`** | Legacy Material coupling |
@@ -67,11 +67,11 @@ Real Flutter widgets (`GeoRadarWidget`, `GeoCompassWidget`, `GeoTelemetryCard`, 
 
 ## Installation
 
-Add `flutter_geolocation` to your `pubspec.yaml`:
+Add `geolocator_flutter` to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_geolocation: ^1.0.0
+  geolocator_flutter: ^1.0.0
 ```
 
 Then run:
@@ -124,7 +124,7 @@ Zero extra setup required. Browsers require a secure context (`https://` or `htt
 ### 1. One-Line Current Position
 
 ```dart
-import 'package:flutter_geolocation/flutter_geolocation.dart';
+import 'package:geolocator_flutter/geolocator_flutter.dart';
 
 Future<void> fetchLocation() async {
   final permission = await FlutterGeolocation.ensurePermission();
@@ -171,7 +171,7 @@ Drop modern, customizable instruments directly into any Flutter app — Material
 
 ```dart
 import 'package:flutter/widgets.dart';
-import 'package:flutter_geolocation/flutter_geolocation.dart';
+import 'package:geolocator_flutter/geolocator_flutter.dart';
 
 class LiveLocationHud extends StatefulWidget {
   const LiveLocationHud({super.key});

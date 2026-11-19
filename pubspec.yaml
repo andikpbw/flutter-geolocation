@@ -1,4 +1,4 @@
-name: flutter_geolocation
+name: geolocator_flutter
 description: >-
   Modern, lightweight, accurate Flutter geolocation library with WGS-84
   geodesy, Kalman filtering, geofencing, live radar & compass HUD widgets.
@@ -41,16 +41,16 @@ flutter:
   plugin:
     platforms:
       android:
-        package: id.humanize.flutter_geolocation
-        pluginClass: FlutterGeolocationPlugin
+        package: id.humanize.geolocator_flutter
+        pluginClass: GeolocatorFlutterPlugin
       ios:
-        pluginClass: FlutterGeolocationPlugin
+        pluginClass: GeolocatorFlutterPlugin
       macos:
-        pluginClass: FlutterGeolocationPlugin
+        pluginClass: GeolocatorFlutterPlugin
       windows:
-        pluginClass: FlutterGeolocationPluginCApi
+        pluginClass: GeolocatorFlutterPluginCApi
       linux:
-        pluginClass: FlutterGeolocationPlugin
+        pluginClass: GeolocatorFlutterPlugin
       web:
-        pluginClass: FlutterGeolocationWeb
-        fileName: flutter_geolocation_web.dart
+        pluginClass: GeolocatorFlutterWeb
+        fileName: geolocator_flutter_web.dart

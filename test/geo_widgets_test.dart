@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_geolocation/flutter_geolocation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geolocator_flutter/geolocator_flutter.dart';
 
 void main() {
   final samplePosition = GeoPosition.fromLatLng(

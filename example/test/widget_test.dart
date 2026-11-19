@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_geolocation/flutter_geolocation.dart';
-import 'package:flutter_geolocation_example/main.dart';
+import 'package:geolocator_flutter/geolocator_flutter.dart';
+import 'package:geolocator_flutter_example/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -25,7 +25,7 @@ void main() {
     await tester.pumpWidget(const GeolocationExampleApp());
     await tester.pump(const Duration(milliseconds: 50));
 
-    expect(find.text('FLUTTER GEOLOCATION'), findsOneWidget);
+    expect(find.text('GEOLOCATOR FLUTTER'), findsOneWidget);
     expect(find.byType(GeoRadarWidget), findsOneWidget);
     expect(find.byType(GeoCompassWidget), findsOneWidget);
     expect(find.byType(GeoTelemetryCard), findsOneWidget);

@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(PROJECT_NAME "flutter_geolocation")
+set(PROJECT_NAME "geolocator_flutter")
 project(${PROJECT_NAME} LANGUAGES CXX)
 
-set(PLUGIN_NAME "flutter_geolocation_plugin")
+set(PLUGIN_NAME "geolocator_flutter_plugin")
 
 add_library(${PLUGIN_NAME} SHARED
-  "flutter_geolocation_plugin.cc"
+  "geolocator_flutter_plugin.cc"
 )
 
 apply_standard_settings(${PLUGIN_NAME})
@@ -20,7 +20,7 @@ target_include_directories(${PLUGIN_NAME} INTERFACE
 target_link_libraries(${PLUGIN_NAME} PRIVATE flutter)
 target_link_libraries(${PLUGIN_NAME} PRIVATE PkgConfig::GTK)
 
-set(flutter_geolocation_bundled_libraries
+set(geolocator_flutter_bundled_libraries
   ""
   PARENT_SCOPE
 )

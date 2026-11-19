@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_geolocation/flutter_geolocation.dart';
+import 'package:geolocator_flutter/geolocator_flutter.dart';
 
 void main() {
   // Use the built-in deterministic simulator for instant cross-platform demo.
@@ -239,7 +239,7 @@ class GeolocationDashboardView extends StatelessWidget {
                       height: 34.0,
                       child: Center(
                         child: Text(
-                          'FG',
+                          'GF',
                           style: TextStyle(
                             fontSize: 13.0,
                             fontWeight: FontWeight.w900,
@@ -255,7 +255,7 @@ class GeolocationDashboardView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'FLUTTER GEOLOCATION',
+                          'GEOLOCATOR FLUTTER',
                           style: TextStyle(
                             fontSize: 15.0,
                             fontWeight: FontWeight.w800,

@@ -1,4 +1,4 @@
-package id.humanize.flutter_geolocation
+package id.humanize.geolocator_flutter
 
 import android.Manifest
 import android.app.Activity
@@ -29,18 +29,18 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 
-class FlutterGeolocationPlugin :
+class GeolocatorFlutterPlugin :
     FlutterPlugin,
     MethodCallHandler,
     ActivityAware,
     PluginRegistry.RequestPermissionsResultListener {
 
     private companion object {
-        const val METHOD_CHANNEL = "id.humanize.flutter_geolocation/methods"
-        const val POSITION_CHANNEL = "id.humanize.flutter_geolocation/positions"
-        const val SERVICE_CHANNEL = "id.humanize.flutter_geolocation/service_status"
+        const val METHOD_CHANNEL = "id.humanize.geolocator_flutter/methods"
+        const val POSITION_CHANNEL = "id.humanize.geolocator_flutter/positions"
+        const val SERVICE_CHANNEL = "id.humanize.geolocator_flutter/service_status"
         const val PERMISSION_REQUEST_CODE = 8421
-        const val PREFS_NAME = "id.humanize.flutter_geolocation.prefs"
+        const val PREFS_NAME = "id.humanize.geolocator_flutter.prefs"
         const val KEY_PERMISSION_REQUESTED = "permission_requested"
     }
 

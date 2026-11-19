@@ -319,7 +319,7 @@ class GeoTrackRecorder {
   /// Exports the recorded track as a GPX 1.1 XML string.
   String toGpx({
     String name = 'Recorded Track',
-    String creator = 'flutter_geolocation',
+    String creator = 'geolocator_flutter',
   }) {
     final escapedName = _escapeXml(name);
     final escapedCreator = _escapeXml(creator);

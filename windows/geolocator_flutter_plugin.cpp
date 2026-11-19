@@ -1,4 +1,4 @@
-#include "flutter_geolocation_plugin.h"
+#include "geolocator_flutter_plugin.h"
 
 #include <windows.h>
 #include <shellapi.h>
@@ -13,7 +13,7 @@
 #include <mutex>
 #include <string>
 
-namespace flutter_geolocation {
+namespace geolocator_flutter {
 
 namespace {
 
@@ -70,14 +70,14 @@ class PositionStreamState {
 
 }  // namespace
 
-void FlutterGeolocationPlugin::RegisterWithRegistrar(
+void GeolocatorFlutterPlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows* registrar) {
   auto method_channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "id.humanize.flutter_geolocation/methods",
+          registrar->messenger(), "id.humanize.geolocator_flutter/methods",
           &flutter::StandardMethodCodec::GetInstance());
 
-  auto plugin = std::make_unique<FlutterGeolocationPlugin>();
+  auto plugin = std::make_unique<GeolocatorFlutterPlugin>();
   method_channel->SetMethodCallHandler(
       [plugin_pointer = plugin.get()](const auto& call, auto result) {
         plugin_pointer->HandleMethodCall(call, std::move(result));
@@ -86,7 +86,7 @@ void FlutterGeolocationPlugin::RegisterWithRegistrar(
   auto stream_state = std::make_shared<PositionStreamState>();
   auto position_channel =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "id.humanize.flutter_geolocation/positions",
+          registrar->messenger(), "id.humanize.geolocator_flutter/positions",
           &flutter::StandardMethodCodec::GetInstance());
 
   position_channel->SetStreamHandler(
@@ -131,7 +131,7 @@ void FlutterGeolocationPlugin::RegisterWithRegistrar(
   auto service_channel =
       std::make_unique<flutter::EventChannel<flutter::EncodableValue>>(
           registrar->messenger(),
-          "id.humanize.flutter_geolocation/service_status",
+          "id.humanize.geolocator_flutter/service_status",
           &flutter::StandardMethodCodec::GetInstance());
   service_channel->SetStreamHandler(
       std::make_unique<flutter::StreamHandlerFunctions<flutter::EncodableValue>>(
@@ -148,10 +148,10 @@ void FlutterGeolocationPlugin::RegisterWithRegistrar(
   registrar->AddPlugin(std::move(plugin));
 }
 
-FlutterGeolocationPlugin::FlutterGeolocationPlugin() = default;
-FlutterGeolocationPlugin::~FlutterGeolocationPlugin() = default;
+GeolocatorFlutterPlugin::GeolocatorFlutterPlugin() = default;
+GeolocatorFlutterPlugin::~GeolocatorFlutterPlugin() = default;
 
-void FlutterGeolocationPlugin::HandleMethodCall(
+void GeolocatorFlutterPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue>& method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
   const std::string& method = method_call.method_name();
@@ -211,4 +211,4 @@ void FlutterGeolocationPlugin::HandleMethodCall(
   }
 }
 
-}  // namespace flutter_geolocation
+}  // namespace geolocator_flutter

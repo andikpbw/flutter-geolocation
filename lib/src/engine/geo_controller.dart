@@ -7,7 +7,7 @@ import '../core/geo_coordinate.dart';
 import '../core/geo_exception.dart';
 import '../core/geo_position.dart';
 import '../core/geo_settings.dart';
-import '../flutter_geolocation_client.dart';
+import '../geolocator_flutter_client.dart';
 import 'geo_track_recorder.dart';
 import 'geofence_engine.dart';
 

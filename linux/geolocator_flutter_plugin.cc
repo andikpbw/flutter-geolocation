@@ -1,4 +1,4 @@
-#include "include/flutter_geolocation/flutter_geolocation_plugin.h"
+#include "include/geolocator_flutter/geolocator_flutter_plugin.h"
 
 #include <flutter_linux/flutter_linux.h>
 #include <gio/gio.h>
@@ -6,11 +6,11 @@
 
 #include <cstring>
 
-#define FLUTTER_GEOLOCATION_PLUGIN(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST((obj), flutter_geolocation_plugin_get_type(), \
-                              FlutterGeolocationPlugin))
+#define GEOLOCATOR_FLUTTER_PLUGIN(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST((obj), geolocator_flutter_plugin_get_type(), \
+                              GeolocatorFlutterPlugin))
 
-struct _FlutterGeolocationPlugin {
+struct _GeolocatorFlutterPlugin {
   GObject parent_instance;
   FlMethodChannel* method_channel;
   FlEventChannel* position_channel;
@@ -20,7 +20,7 @@ struct _FlutterGeolocationPlugin {
   gchar* active_client_path;
 };
 
-G_DEFINE_TYPE(FlutterGeolocationPlugin, flutter_geolocation_plugin,
+G_DEFINE_TYPE(GeolocatorFlutterPlugin, geolocator_flutter_plugin,
               g_object_get_type())
 
 static double read_dbus_double(GDBusConnection* bus,
@@ -68,7 +68,7 @@ static FlValue* location_object_to_fl_value(GDBusConnection* bus,
   return map;
 }
 
-static gboolean is_geoclue_available(FlutterGeolocationPlugin* self) {
+static gboolean is_geoclue_available(GeolocatorFlutterPlugin* self) {
   if (!self->system_bus) {
     self->system_bus = g_bus_get_sync(G_BUS_TYPE_SYSTEM, nullptr, nullptr);
   }
@@ -97,7 +97,7 @@ static gchar* create_geoclue_client(GDBusConnection* bus) {
         bus, "org.freedesktop.GeoClue2", path,
         "org.freedesktop.DBus.Properties", "Set",
         g_variant_new("(ssv)", "org.freedesktop.GeoClue2.Client", "DesktopId",
-                      g_variant_new_string("flutter_geolocation")),
+                      g_variant_new_string("geolocator_flutter")),
         nullptr, G_DBUS_CALL_FLAGS_NONE, 2000, nullptr, nullptr);
   }
   return path;
@@ -110,7 +110,7 @@ static void on_geoclue_location_updated(GDBusConnection* connection,
                                         const gchar* signal_name,
                                         GVariant* parameters,
                                         gpointer user_data) {
-  auto* self = FLUTTER_GEOLOCATION_PLUGIN(user_data);
+  auto* self = GEOLOCATOR_FLUTTER_PLUGIN(user_data);
   const gchar* old_loc = nullptr;
   const gchar* new_loc = nullptr;
   g_variant_get(parameters, "(&o&o)", &old_loc, &new_loc);
@@ -123,7 +123,7 @@ static void on_geoclue_location_updated(GDBusConnection* connection,
 static FlMethodErrorResponse* on_position_listen(FlEventChannel* channel,
                                                  FlValue* args,
                                                  gpointer user_data) {
-  auto* self = FLUTTER_GEOLOCATION_PLUGIN(user_data);
+  auto* self = GEOLOCATOR_FLUTTER_PLUGIN(user_data);
   if (!is_geoclue_available(self)) {
     return fl_method_error_response_new(
         "SERVICE_DISABLED", "GeoClue2 location daemon is unavailable.", nullptr);
@@ -149,7 +149,7 @@ static FlMethodErrorResponse* on_position_listen(FlEventChannel* channel,
 static FlMethodErrorResponse* on_position_cancel(FlEventChannel* channel,
                                                  FlValue* args,
                                                  gpointer user_data) {
-  auto* self = FLUTTER_GEOLOCATION_PLUGIN(user_data);
+  auto* self = GEOLOCATOR_FLUTTER_PLUGIN(user_data);
   if (self->system_bus && self->location_signal_id != 0) {
     g_dbus_connection_signal_unsubscribe(self->system_bus,
                                          self->location_signal_id);
@@ -168,7 +168,7 @@ static FlMethodErrorResponse* on_position_cancel(FlEventChannel* channel,
 static FlMethodErrorResponse* on_service_listen(FlEventChannel* channel,
                                                 FlValue* args,
                                                 gpointer user_data) {
-  auto* self = FLUTTER_GEOLOCATION_PLUGIN(user_data);
+  auto* self = GEOLOCATOR_FLUTTER_PLUGIN(user_data);
   gboolean available = is_geoclue_available(self);
   g_autoptr(FlValue) val =
       fl_value_new_string(available ? "enabled" : "disabled");
@@ -176,8 +176,8 @@ static FlMethodErrorResponse* on_service_listen(FlEventChannel* channel,
   return nullptr;
 }
 
-static void flutter_geolocation_plugin_handle_method_call(
-    FlutterGeolocationPlugin* self, FlMethodCall* method_call) {
+static void geolocator_flutter_plugin_handle_method_call(
+    GeolocatorFlutterPlugin* self, FlMethodCall* method_call) {
   g_autoptr(FlMethodResponse) response = nullptr;
   const gchar* method = fl_method_call_get_name(method_call);
 
@@ -245,22 +245,22 @@ static void flutter_geolocation_plugin_handle_method_call(
   fl_method_call_respond(method_call, response, nullptr);
 }
 
-static void flutter_geolocation_plugin_dispose(GObject* object) {
-  auto* self = FLUTTER_GEOLOCATION_PLUGIN(object);
+static void geolocator_flutter_plugin_dispose(GObject* object) {
+  auto* self = GEOLOCATOR_FLUTTER_PLUGIN(object);
   on_position_cancel(nullptr, nullptr, self);
   g_clear_object(&self->method_channel);
   g_clear_object(&self->position_channel);
   g_clear_object(&self->service_channel);
   g_clear_object(&self->system_bus);
-  G_OBJECT_CLASS(flutter_geolocation_plugin_parent_class)->dispose(object);
+  G_OBJECT_CLASS(geolocator_flutter_plugin_parent_class)->dispose(object);
 }
 
-static void flutter_geolocation_plugin_class_init(
-    FlutterGeolocationPluginClass* klass) {
-  G_OBJECT_CLASS(klass)->dispose = flutter_geolocation_plugin_dispose;
+static void geolocator_flutter_plugin_class_init(
+    GeolocatorFlutterPluginClass* klass) {
+  G_OBJECT_CLASS(klass)->dispose = geolocator_flutter_plugin_dispose;
 }
 
-static void flutter_geolocation_plugin_init(FlutterGeolocationPlugin* self) {
+static void geolocator_flutter_plugin_init(GeolocatorFlutterPlugin* self) {
   self->system_bus = nullptr;
   self->location_signal_id = 0;
   self->active_client_path = nullptr;
@@ -269,33 +269,33 @@ static void flutter_geolocation_plugin_init(FlutterGeolocationPlugin* self) {
 static void method_call_cb(FlMethodChannel* channel,
                            FlMethodCall* method_call,
                            gpointer user_data) {
-  flutter_geolocation_plugin_handle_method_call(
-      FLUTTER_GEOLOCATION_PLUGIN(user_data), method_call);
+  geolocator_flutter_plugin_handle_method_call(
+      GEOLOCATOR_FLUTTER_PLUGIN(user_data), method_call);
 }
 
-void flutter_geolocation_plugin_register_with_registrar(
+void geolocator_flutter_plugin_register_with_registrar(
     FlPluginRegistrar* registrar) {
-  FlutterGeolocationPlugin* plugin = FLUTTER_GEOLOCATION_PLUGIN(
-      g_object_new(flutter_geolocation_plugin_get_type(), nullptr));
+  GeolocatorFlutterPlugin* plugin = GEOLOCATOR_FLUTTER_PLUGIN(
+      g_object_new(geolocator_flutter_plugin_get_type(), nullptr));
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   plugin->method_channel = fl_method_channel_new(
       fl_plugin_registrar_get_messenger(registrar),
-      "id.humanize.flutter_geolocation/methods", FL_METHOD_CODEC(codec));
+      "id.humanize.geolocator_flutter/methods", FL_METHOD_CODEC(codec));
   fl_method_channel_set_method_call_handler(
       plugin->method_channel, method_call_cb, g_object_ref(plugin),
       g_object_unref);
 
   plugin->position_channel = fl_event_channel_new(
       fl_plugin_registrar_get_messenger(registrar),
-      "id.humanize.flutter_geolocation/positions", FL_METHOD_CODEC(codec));
+      "id.humanize.geolocator_flutter/positions", FL_METHOD_CODEC(codec));
   fl_event_channel_set_stream_handlers(
       plugin->position_channel, on_position_listen, on_position_cancel,
       g_object_ref(plugin), g_object_unref);
 
   plugin->service_channel = fl_event_channel_new(
       fl_plugin_registrar_get_messenger(registrar),
-      "id.humanize.flutter_geolocation/service_status", FL_METHOD_CODEC(codec));
+      "id.humanize.geolocator_flutter/service_status", FL_METHOD_CODEC(codec));
   fl_event_channel_set_stream_handlers(
       plugin->service_channel, on_service_listen, nullptr, g_object_ref(plugin),
       g_object_unref);

@@ -2,7 +2,7 @@ import '../core/geo_position.dart';
 import '../core/geo_settings.dart';
 import 'method_channel_geolocation.dart';
 
-/// Platform interface for `flutter_geolocation`.
+/// Platform interface for `geolocator_flutter`.
 ///
 /// Platform-specific implementations (Android, iOS, macOS, Windows, Linux, Web)
 /// extend this class and register themselves by setting

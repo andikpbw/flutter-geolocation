@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter_geolocation/flutter_geolocation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:geolocator_flutter/geolocator_flutter.dart';
 
 void main() {
   group('GeoKalmanFilter', () {

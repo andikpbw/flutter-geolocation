@@ -1,6 +1,6 @@
 ## 1.0.0
 
-* Initial release of `flutter_geolocation` — modern, lightweight, accurate geolocation toolkit with zero third-party dependencies.
+* Initial release of `geolocator_flutter` — modern, lightweight, accurate geolocation toolkit with zero third-party dependencies.
 * **Cross-Platform Location Engine**: Native implementations for Android, iOS, macOS, Windows, Linux, and WebAssembly-ready Web (`dart:js_interop`).
 * **WGS-84 Geodesy Engine**: Sub-millimeter Vincenty inverse & direct formulas (with antipodal fallback), fast Haversine distance, midpoint/SLERP interpolation, cross-track/along-track distance, Geohash encoder/decoder with neighbors, and DD/DDM/DMS coordinate formatting & parsing.
 * **Spatial Geometry**: Antimeridian-safe `GeoBounds`, `GeoPolyline` (length, Douglas-Peucker simplification, nearest point, off-route detection), and `GeoPolygon` (ray-casting point-in-polygon, spherical-excess geodesic area).

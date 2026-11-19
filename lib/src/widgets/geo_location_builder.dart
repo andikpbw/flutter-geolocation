@@ -6,7 +6,7 @@ import '../core/geo_exception.dart';
 import '../core/geo_position.dart';
 import '../core/geo_settings.dart';
 import '../engine/geo_controller.dart';
-import '../flutter_geolocation_client.dart';
+import '../geolocator_flutter_client.dart';
 
 /// Builder callback invoked with a live [GeoPosition].
 typedef GeoPositionWidgetBuilder =
