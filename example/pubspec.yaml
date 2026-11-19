@@ -1,0 +1,21 @@
+name: flutter_geolocation_example
+description: Interactive example showcasing flutter_geolocation widgets and engine.
+publish_to: none
+
+environment:
+  sdk: ^3.8.0
+  flutter: '>=3.44.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_geolocation:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: false

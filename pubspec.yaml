@@ -1,0 +1,56 @@
+name: flutter_geolocation
+description: >-
+  Modern, lightweight, accurate Flutter geolocation library with WGS-84
+  geodesy, Kalman filtering, geofencing, live radar & compass HUD widgets.
+version: 1.0.0
+homepage: https://humanize.id
+repository: https://github.com/andikpbw/flutter-geolocation
+issue_tracker: https://github.com/andikpbw/flutter-geolocation/issues
+funding:
+  - https://humanize.id
+
+topics:
+  - geolocation
+  - gps
+  - location
+  - geofencing
+  - compass
+
+screenshots:
+  - description: Live animated Flutter Geolocation UI running with Radar HUD, Compass Dial, Telemetry Card, and Geofencing.
+    path: screenshots/live_demo.gif
+  - description: High-resolution Flutter Geolocation dashboard showcase.
+    path: screenshots/dashboard_preview.png
+
+environment:
+  sdk: ^3.8.0
+  flutter: '>=3.44.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: id.humanize.flutter_geolocation
+        pluginClass: FlutterGeolocationPlugin
+      ios:
+        pluginClass: FlutterGeolocationPlugin
+      macos:
+        pluginClass: FlutterGeolocationPlugin
+      windows:
+        pluginClass: FlutterGeolocationPluginCApi
+      linux:
+        pluginClass: FlutterGeolocationPlugin
+      web:
+        pluginClass: FlutterGeolocationWeb
+        fileName: flutter_geolocation_web.dart

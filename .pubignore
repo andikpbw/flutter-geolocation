@@ -1,0 +1,20 @@
+# Build & tooling caches
+build/
+example/build/
+.dart_tool/
+example/.dart_tool/
+.packages
+.pub/
+pubspec.lock
+example/pubspec.lock
+.flutter-plugins
+.flutter-plugins-dependencies
+example/.flutter-plugins
+example/.flutter-plugins-dependencies
+doc/api/
+tool/
+coverage/
+.github/
+.DS_Store
+*.log
+*.iml
